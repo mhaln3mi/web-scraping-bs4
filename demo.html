@@ -150,7 +150,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="tools-we-will-be-using" class="level3">
 <h3 class="anchored" data-anchor-id="tools-we-will-be-using">Tools we will be using:</h3>
-<p>We will to install the following libraries:</p>
+<p>We will need to install the following libraries:</p>
 <ul>
 <li><code>BeautifulSoup</code></li>
 <li><code>reauests</code></li>
@@ -191,22 +191,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><br></p>
 <section id="import-libraries" class="level3">
 <h3 class="anchored" data-anchor-id="import-libraries">Import libraries</h3>
-<details>
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> bs4 <span class="im">import</span> BeautifulSoup</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pandas <span class="im">import</span> DataFrame</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <p><br></p>
 </section>
 <section id="retrieve-html" class="level3">
 <h3 class="anchored" data-anchor-id="retrieve-html">Retrieve HTML</h3>
-<details>
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://www.pararius.com/apartments/amsterdam/page-'</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> requests.get(url)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <p><br></p>
 </section>
 </section>
@@ -215,45 +209,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><br></p>
 <section id="create-a-beautiful-soup-object" class="level3">
 <h3 class="anchored" data-anchor-id="create-a-beautiful-soup-object">Create a Beautiful Soup object</h3>
-<details>
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>doc <span class="op">=</span> BeautifulSoup(result.content, <span class="st">"html.parser"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <p><br></p>
 </section>
 <section id="find-the-element" class="level3">
 <h3 class="anchored" data-anchor-id="find-the-element">Find the element</h3>
-<details>
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>items <span class="op">=</span> doc.find_all(<span class="st">"section"</span>, class_<span class="op">=</span><span class="st">"listing-search-item"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <p>The information we need is inside a <code>section</code> element with class name <code>listing-search-item</code>. So we used <code>find_all()</code> function on our document so we can parse it to extract information.</p>
 <p><br></p>
 </section>
 <section id="creating-our-variables-lists" class="level3">
 <h3 class="anchored" data-anchor-id="creating-our-variables-lists">Creating our variables lists</h3>
-<details>
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>title <span class="op">=</span> []</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>loc <span class="op">=</span> []</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>price <span class="op">=</span> []</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>area <span class="op">=</span> []</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>rooms <span class="op">=</span> []</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <p>We made these lists so we can extract the information from the HTML tag and save it here.</p>
 <p><br></p>
 </section>
 <section id="extract-data-from-element" class="level3">
 <h3 class="anchored" data-anchor-id="extract-data-from-element">Extract data from element</h3>
-<details>
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> item <span class="kw">in</span> items:</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>        title.append(item.find(<span class="st">"a"</span>, class_<span class="op">=</span><span class="st">"listing-search-item__link--title"</span>).text) </span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        loc.append(item.find(<span class="st">"div"</span>, class_<span class="op">=</span><span class="st">"listing-search-item__location"</span>).text.strip()) </span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        price.append(item.find(<span class="st">"div"</span>, class_<span class="op">=</span><span class="st">"listing-search-item__price"</span>).text.strip())</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        area.append(item.find(<span class="st">"li"</span>, class_<span class="op">=</span><span class="st">"illustrated-features__item illustrated-features__item--surface-area"</span>).text)</span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        rooms.append(item.find(<span class="st">"li"</span>, class_<span class="op">=</span><span class="st">"illustrated-features__item illustrated-features__item--number-of-rooms"</span>).text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <p>We used a for loop to extract data from <code>items</code> list which contains all the sections we need in this page. We used <code>find()</code> to find the element with our data and used <code>text()</code> function to extract the text, after that, we appended the text to the appropriate list.</p>
 <p><br></p>
 </section>
@@ -263,19 +245,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><br></p>
 <section id="creating-the-dataframe" class="level3">
 <h3 class="anchored" data-anchor-id="creating-the-dataframe">Creating the Dataframe</h3>
-<details>
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> { <span class="st">'Title'</span>: title, <span class="st">'Loc'</span>: loc, <span class="st">'Price'</span>: price, <span class="st">'Area'</span>: area, <span class="st">'Rooms'</span>: rooms}</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> DataFrame(data, columns <span class="op">=</span> [<span class="st">'Title'</span>, <span class="st">'Location'</span>, <span class="st">'Price'</span>, <span class="st">'Area'</span>, <span class="st">'Rooms'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <p><br></p>
 </section>
 <section id="saving-the-dataframe" class="level3">
 <h3 class="anchored" data-anchor-id="saving-the-dataframe">Saving the Dataframe</h3>
-<details>
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="vs">r'C:\Users\***\df.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <p>Use the path where you want to save the csv file.</p>
 </section>
 </section>
@@ -286,8 +262,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><br></p>
 <section id="creating-a-function" class="level3">
 <h3 class="anchored" data-anchor-id="creating-a-function">Creating a function</h3>
-<details>
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scrapingFunc(webpage, page_number):</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>   next_page <span class="op">=</span> webpage <span class="op">+</span> <span class="bu">str</span>(page_number)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>   result <span class="op">=</span> requests.get(<span class="bu">str</span>(next_page))</span>
@@ -302,14 +276,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>        price.append(item.find(<span class="st">"div"</span>, class_<span class="op">=</span><span class="st">"listing-search-item__price"</span>).text.strip())</span>
 <span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>        area.append(item.find(<span class="st">"li"</span>, class_<span class="op">=</span><span class="st">"illustrated-features__item illustrated-features__item--surface-area"</span>).text)</span>
 <span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>        rooms.append(item.find(<span class="st">"li"</span>, class_<span class="op">=</span><span class="st">"illustrated-features__item illustrated-features__item--number-of-rooms"</span>).text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <p>We create a function that takes two arguments, the webpage url, and the number of pages you want to scrape. We will also define varible <code>next_page</code> which is the webpage + the number of pages.</p>
 <p><br></p>
 </section>
 <section id="adding-if-statment-for-next-page" class="level3">
 <h3 class="anchored" data-anchor-id="adding-if-statment-for-next-page">Adding if statment for next page</h3>
-<details>
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scrapingFunc(webpage, page_number):</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>   next_page <span class="op">=</span> webpage <span class="op">+</span> <span class="bu">str</span>(page_number)</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>   result <span class="op">=</span> requests.get(<span class="bu">str</span>(next_page))</span>
@@ -329,16 +300,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>   <span class="cf">if</span> page_number <span class="op">&lt;</span> <span class="dv">16</span>:</span>
 <span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>      page_number <span class="op">=</span> page_number <span class="op">+</span> <span class="dv">1</span></span>
 <span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>      scrapingFunc(webpage, page_number)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <p>Here we want to scrape the first 15 pages so we check if <code>page_number</code> &lt; 16 we add 1 to the <code>page_number</code> and call the function again.</p>
 <p><br></p>
 </section>
 <section id="calling-the-function" class="level3">
 <h3 class="anchored" data-anchor-id="calling-the-function">Calling the function</h3>
-<details>
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>scrapingFunc(url, <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <p>Now we call the function with arguments before creating the dataframe.</p>
 <p><br></p>
 </section>

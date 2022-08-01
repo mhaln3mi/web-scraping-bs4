@@ -5,7 +5,7 @@ format:
   html:
     toc: true
     toc-depth: 1
-    code-fold: true
+    code-fold: false
 kernel: python3
 ---
 
@@ -27,7 +27,7 @@ Data scraping is the process of collecting data from a website into a spreadshee
 
 ### Tools we will be using:
 
-We will to install the following libraries:
+We will need to install the following libraries:
 
 - `BeautifulSoup`
 - `reauests`
