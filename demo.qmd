@@ -1,0 +1,254 @@
+---
+title: "Web Scraping in Python"
+author: "Maan Al Neami<br> "
+format:
+  html:
+    toc: true
+    toc-depth: 1
+    code-fold: true
+kernel: python3
+---
+
+<br/><br/>
+
+
+# Introduction:
+
+Today we are going to use BeautifulSoap to Web scrap real estate website for property prices, By the en, we will be able to get a CSV file containing the data.
+
+<br/>
+
+### What is Web Scraping?
+
+Data scraping is the process of collecting data from a website into a spreadsheet or local file saved on your computer. It’s one of the most efficient ways to get data from the web, which can save you a lot of time.
+
+<br/>
+
+
+### Tools we will be using:
+
+We will to install the following libraries:
+
+- `BeautifulSoup`
+- `reauests`
+- `pandas`
+
+<br/>
+
+Because `BeautifulSoup` was made for HTML parsing, we will need to use `requests` to get access to online Webpages. `pandas` will be used to make a `.csv` file containing our data.
+
+<br/>
+
+### Other tools to use:
+
+There are other options to handle Web scraping, the most popular tools for Python are:
+
+- `selenium`
+- `scrapy`
+
+They all have their advantages and disadvantages but they are considered harder to learn than `BeautifulSoup` which is why we choose it.
+
+<br/>
+
+
+
+# Inspecting Webpage
+
+Before you write any code, you need to get to know the website that you want to scrape. That should be your first step for any web scraping project. You’ll need to understand the site structure to extract the information that’s relevant for you. Start by opening the site you want to scrape with Google Chrome browser. Here we will be using [Pararius Amsterdam rent data](https://www.pararius.com/apartments/amsterdam)
+
+<br/>
+
+### Inspect the URL
+
+URLs contain a lot of usefull informations. For an example: (https://www.pararius.com/apartments/amsterdam/page-2) We can see from this URL that the page number is coming after `page`. We can use this information to help us with pagination.
+
+<br />
+
+### Inspect the HTML elements
+
+We need to check in what HTML elements is our data located. We can do that by right clicking on a the webpage and choosing `inspect`, or use the command `ctrl+shift+c`. Look for the elements class and id attributes.
+
+<br/>
+
+# Scrape HTML content
+
+<br/>
+
+### Import libraries
+
+```{python}
+import requests
+from bs4 import BeautifulSoup
+from pandas import DataFrame
+```
+
+<br/>
+
+### Retrieve HTML
+
+```{python}
+url = 'https://www.pararius.com/apartments/amsterdam/page-'
+
+result = requests.get(url)
+
+```
+
+
+<br/>
+
+# Parse HTML content
+
+<br/>
+
+### Create a Beautiful Soup object
+```{python}
+doc = BeautifulSoup(result.content, "html.parser")
+```
+
+<br/>
+
+### Find the element
+
+```{python}
+items = doc.find_all("section", class_="listing-search-item")
+```
+
+The information we need is inside a `section` element with class name `listing-search-item`. So we used `find_all()` function on our document so we can parse it to extract information.
+
+<br/>
+
+### Creating our variables lists
+
+```{python}
+title = []
+loc = []
+price = []
+area = []
+rooms = []
+```
+
+We made these lists so we can extract the information from the HTML tag and save it here.
+
+<br/>
+
+
+### Extract data from element
+
+```{python}
+for item in items:
+        title.append(item.find("a", class_="listing-search-item__link--title").text) 
+        loc.append(item.find("div", class_="listing-search-item__location").text.strip()) 
+        price.append(item.find("div", class_="listing-search-item__price").text.strip())
+        area.append(item.find("li", class_="illustrated-features__item illustrated-features__item--surface-area").text)
+        rooms.append(item.find("li", class_="illustrated-features__item illustrated-features__item--number-of-rooms").text)
+```
+
+We used a for loop to extract data from `items` list which contains all the sections we need in this page. We used `find()` to find the element with our data and used `text()` function to extract the text, after that, we appended the text to the appropriate list.
+
+<br/>
+
+
+# Turn to Dataframe
+
+<br/>
+
+### Creating the Dataframe
+
+```{python}
+data = { 'Title': title, 'Loc': loc, 'Price': price, 'Area': area, 'Rooms': rooms}
+df = DataFrame(data, columns = ['Title', 'Location', 'Price', 'Area', 'Rooms'])
+```
+
+
+<br/>
+
+### Saving the Dataframe
+
+```{python}
+df.to_csv(r'C:\Users\***\df.csv')
+```
+
+Use the path where you want to save the csv file.
+
+
+# Pagination
+
+<br/>
+
+Sometimes the data you want are spread over multiple pages, how can you scrap the data in such situation?
+Remember when we talked about URL? Using the URL, we can make our program go over pages to collect the data.
+
+<br/>
+
+### Creating a function
+
+```{python}
+def scrapingFunc(webpage, page_number):
+   next_page = webpage + str(page_number)
+   result = requests.get(str(next_page))
+   doc = BeautifulSoup(result.content, "html.parser")
+
+   items = doc.find_all("section", class_="listing-search-item")
+
+
+   for item in items:
+        title.append(item.find("a", class_="listing-search-item__link--title").text) 
+        loc.append(item.find("div", class_="listing-search-item__location").text.strip()) 
+        price.append(item.find("div", class_="listing-search-item__price").text.strip())
+        area.append(item.find("li", class_="illustrated-features__item illustrated-features__item--surface-area").text)
+        rooms.append(item.find("li", class_="illustrated-features__item illustrated-features__item--number-of-rooms").text)
+```
+
+We create a function that takes two arguments, the webpage url, and the number of pages you want to scrape. We will also define varible `next_page` which is the webpage + the number of pages. 
+
+
+<br/>
+
+
+### Adding if statment for next page
+
+```{python}
+def scrapingFunc(webpage, page_number):
+   next_page = webpage + str(page_number)
+   result = requests.get(str(next_page))
+   doc = BeautifulSoup(result.content, "html.parser")
+
+   items = doc.find_all("section", class_="listing-search-item")
+
+
+   for item in items:
+        title.append(item.find("a", class_="listing-search-item__link--title").text) 
+        loc.append(item.find("div", class_="listing-search-item__location").text.strip()) 
+        price.append(item.find("div", class_="listing-search-item__price").text.strip())
+        area.append(item.find("li", class_="illustrated-features__item illustrated-features__item--surface-area").text)
+        rooms.append(item.find("li", class_="illustrated-features__item illustrated-features__item--number-of-rooms").text)
+
+ #Generating the next page url
+   if page_number < 16:
+      page_number = page_number + 1
+      scrapingFunc(webpage, page_number)
+```
+
+Here we want to scrape the first 15 pages so we check if `page_number` < 16 we add 1 to the `page_number` and call the function again.
+
+
+<br/>
+
+
+### Calling the function
+
+```{python}
+scrapingFunc(url, 1)
+```
+
+Now we call the function with arguments before creating the dataframe.
+
+
+<br/>
+
+
+# Resources
+
+- https://www.geeksforgeeks.org/implementing-web-scraping-python-beautiful-soup/
+- https://opensource.com/article/21/9/web-scraping-python-beautiful-soup
+- https://realpython.com/beautiful-soup-web-scraper-python/
